@@ -1,0 +1,5 @@
+# Ignore macOS system files used to store folder metadata
+.DS_Store
+__pycache__/
+*.pyc
+.ok_*
