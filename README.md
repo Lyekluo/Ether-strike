@@ -4,11 +4,11 @@
 
 **“纯良也好，悲惨也罢，一些事纵然会令无数人惊叹，但就算无人问津也无妨，记忆会捕捉一切。”**
 
-"A million stories come to an end, and a million stories go on, retold. Yet there are 'tales' in between that go unwritten and thus unheard. They pass on, unspoken. They pass into memory."_
+"A million stories come to an end, and a million stories go on, retold. Yet there are 'tales' in between that go unwritten and thus unheard. They pass on, unspoken. They pass into memory."
 
 "Memory... For better or worse, memory will not discriminate. A moment in the mind of one, or a moment shared by many, will take shape unspoiled."
 
 "However innocuous, however tragic, however wonderful, a memory will capture it, though it may never be put to record."
 
 ### Lyekluo
-编辑于 2026.10.9
+编辑于 2026.10.10
