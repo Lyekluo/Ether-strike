@@ -15,6 +15,8 @@ summation(5, lambda x: pow(1/2, x))
 
 该函数的形参是 x
 
+Lambda 表达式在被调用时，会和函数一样创造新的帧
+
 ## Function Currying 函数柯里化
 
 将接收多个参数的函数 拆解成 每次只接受一个参数的函数
