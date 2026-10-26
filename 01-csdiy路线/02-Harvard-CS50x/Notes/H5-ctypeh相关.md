@@ -75,7 +75,6 @@ static inline bool diy_ispunct(int c) {
 }
 
 static inline bool diy_iscntrl(int c) {
-    // 控制字符：小于空格，或者 DEL(0x7F)
     return c < 0x20 || c == 0x7F;
 }
 

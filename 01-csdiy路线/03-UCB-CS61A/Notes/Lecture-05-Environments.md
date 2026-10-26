@@ -1,3 +1,4 @@
+# 环境（作用域）
 
 `func <name>(<formal parameters>) [parent=<label>]`
 

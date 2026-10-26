@@ -1,5 +1,4 @@
-
-## Tree Recursion 树形递归
+# 树形递归
 
 - 斐波那契数列
 - 分割数方法数
@@ -20,4 +19,15 @@
 
 后续会存在记忆化或者是`@lru_cache`的解决方案：将算过的结果存在字典中，下次使用直接查表，斐波那契时间复杂度降为线性
 
-每条路径是否都有 return？
+```python
+from functools import lru_cache
+
+@lru_cache(maxsize=None) 
+def fib(n):
+    if n <= 2: return 1
+    return fib(n-1) + fib(n-2)
+
+print(fib(100))
+```
+
+**每条路径是否都有 return？**
