@@ -4,6 +4,64 @@
 
 字典是一种映射类型，包含若干从 Keys 映射到 Values 的键值对，在内存中通过哈希表实现
 
+- 创建字典
+
+- 查找元素（直接按键索引）
+- 查找元素（get 方法）
+- 获取字典长度
+- 检查键是否存在
+- 获取所有键
+- 获取所有值
+- 获取所有键值对
+
+- 修改或新增元素
+- 字典推导式
+- key 必须可哈希，不能在遍历时改变大小
+
+- 删除元素（del）
+- 删除元素（pop）
+
+```python
+>>> d = {'I': 1, 'V': 5, 'X': 10}
+
+>>> d['X']
+10
+>>> d.get('X-ray', 0)
+0
+>>> d.get('X-ray')
+>>> len(d)
+3
+>>> 'X' in d
+True
+>>> 10 in d
+False
+>>> list(d.keys())
+['I', 'V', 'X']
+>>> list(d.values())
+[1, 5, 10]
+>>> list(d.items())
+[('I', 1), ('V', 5), ('X', 10)]
+
+>>> d['L'] = 50
+>>> d['V'] = 55
+>>> {x: x**2 for x in range(3)}
+{0: 0, 1: 1, 2: 4}
+>>> {[1]: 2}
+Traceback (most recent call last):
+  ...
+TypeError: unhashable type: 'list'
+>>> for k in d:
+...     del d[k]
+...
+Traceback (most recent call last):
+  ...
+RuntimeError: dictionary changed size during iteration
+
+>>> del d['L']
+>>> d.pop('V')
+55
+```
+
 ## 字典推导式
 
 `{<key exp>: <value exp> for <name> in <iterable> if <filter exp>}`
