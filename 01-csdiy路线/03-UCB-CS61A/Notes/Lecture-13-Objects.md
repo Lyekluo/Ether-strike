@@ -134,7 +134,7 @@ True
 
 **例3 类属性的共享**
 
-我们计划让这个类定义的对象
+我们计划让这个类定义的对象 Account
 
 - 有一个类属性：interest（利率）
 - 有两个对象属性：balance（余额）、holder（持有人）
@@ -184,7 +184,245 @@ Account.interest = 0.04
 0.05
 >>> kirk_account.interest
 0.08
+
 >>> del kirk_account.interest
 >>> kirk_account.interest
 0.05
+```
+
+## @dataclass
+
+`@dataclass` 是原生 class 的一个模板生成器
+
+我们计划让这个类的对象 Line
+
+- 具有两个对象属性：slope（斜率）、intercept（截距）
+
+下面第一段代码块效果等价于第二段
+
+```python
+class Line:
+	def __init__(self, slope, intercept):
+		self.slope = slope
+		self.intercept = intercept
+```
+
+引入 `@dataclass` 写法
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Line:
+	slope: float
+	intercept: float
+	def __str__(self):
+		return format_line(self)
+		
+def format_line(c: Line):
+	return f'y = {c.slope}x + {c.intercept}'
+```
+
+```python
+>>> c = Line(3, 4)
+>>> c.slope
+3
+>>> c.intercept
+4
+>>> c
+Line(slope=3, intercept=4)
+>>> type(c) == Line
+True
+>>> print(c)
+y = 3x + 4
+```
+
+`__str__` 决定了打印 Line 所输出的格式化字符串，`__repr__` 决定了求值 Line 所输出的还原对象的表达式
+
+dataclass 会自带 `__eq__` 来判断两个对象中的数据是否相等的方法
+
+## 继承
+
+一个账户类 Account
+
+```python
+class Account:
+    
+    interest = 0.02
+    
+    def __init__(self, account_holder):
+        self.balance = 0
+        self.holder = account_holder
+    
+    def deposit(self, amount):
+        self.balance = self.balance + amount
+        return self.balance
+    
+    def withdraw(self, amount):
+        if amount > self.balance:
+            return 'Insufficient funds'
+        self.balance = self.balance - amount
+        return self.balance
+```
+
+我们计划实现一个活期账户 CheckingAccount：每次取款额外收取 1 美元的手续费，利率也更低
+
+CheckingAccount 是 Account 的专门化，我们称 CheckingAccount 是 Account 的**子类（subclass）**，Account 是 CheckingAccount 的**基类（base class）**
+
+子类继承基类的属性，但可以重写某些属性和方法。因此，在**继承**时，我们只写出子类和基类不一样的地方，剩下未写明的部分，会自动按基类的行为来
+
+指定继承的方式，是把一个或多个求值为基类的表达式放进类名后的括号里
+
+```python
+class CheckingAccount(Account):
+	
+	withdraw_charge = 1
+	interest = 0.01
+	
+	def withdraw(self, amount):
+		return Account.withdraw(self, amount + self.withdraw_charge)
+```
+
+新定义了 手续费，修改了 利率 和 取款方法
+
+这种重新定义的内容会引发名字的查找问题。此时，我们可以知道，点表达式查找的顺序如下：
+
+1. 如果该名字是实例中的名字，就返回该实例中名字的值
+2. 如果没有，则查找这个对象所属类中的名字，返回该类的名字
+3. 如果没有，则查找这个类的基类中的名字，返回该基类名字的值
+
+## 多重继承
+
+子类可以从多个基类继承属性
+
+```python
+class SavingsAccount(Account):
+	deposit_charge = 2
+	def deposit(self, amount):
+		return Account.deposit(self, amount - self.deposit_charge)
+		
+class AsSeenOnTVAccount(CheckingAccount, SavingsAccount):
+	def __init__(self, account_holder):
+		self.holder = account_holder
+		self.balance = 1
+```
+
+```python
+>>> such_a_deal = AsSeenOnTVAccount("John")
+>>> such_a_deal.balance
+1
+>>> such_a_deal.deposit(20)
+19
+>>> such_a_deal.withdraw(5)
+13
+```
+
+**C3 线性化算法**保证了一个原则：在方法解析顺序的链条中，任何一个父类只会出现一次，子类永远排在父类的前面
+
+## 从零搭建的对象系统
+
+如果放弃点表达式，我们可以用函数和字典实现同样的内容
+
+### 前置内容
+
+`callable()` 函数用于查询参数能否被调用（是函数、方法、类等等）
+
+`*args` 将 args 这个元组拆开，将其中的元素一个个拿出来，平铺成位置参数传入
+
+```python
+def add_three(a, b, c):
+    return a + b + c
+
+add_three(1, 2, 3)
+
+my_tuple = (1, 2, 3)
+add_three(*my_tuple)
+```
+
+### 绑定器
+
+首先要创建一个绑定工具
+
+```python
+def bind_method(value, instance):
+	if callable(value):
+		# 如果 value 是一个函数，我们返回一个新函数 method
+		def method(*args):
+			# 把 instance 当作 self 参数，连带传回
+			return value(instance, *args)
+		return method
+	else:
+		return value
+```
+
+### 实例的结构
+
+我们使用绑定器制造一个实例，实例的本质是一个字典
+
+```python
+def make_instance(cls):
+    # 实例自己的状态存在这个字典里
+    attributes = {} 
+    
+    def get_value(name):
+        if name in attributes:
+            return attributes[name]
+        else:
+            # 去类里找
+            value = cls['get'](name)
+            # 如果是函数，需要绑定 self
+            return bind_method(value, instance)
+            
+    def set_value(name, value):
+        attributes[name] = value
+        
+    # 实例就是一个包含了 get 和 set 的字典
+    instance = {'get': get_value, 'set': set_value}
+    return instance
+```
+
+attributes 不用单独传回，它被 get_value 和 set_value 两个函数都包括在内
+
+### 类生成器
+
+```python
+def make_class(sttributes, base_class=None):
+	
+	def get_value(name):
+		if name in attributes:
+			return attributes[name]
+		elif base_class is not None:
+			return base_class['get'](name)
+	
+	def set_value(name, value):
+		attributes[name] = value
+	
+	def new(*args):
+		return init_instance(cls, *args)
+	
+	cls = {'get': get_value, 'set': set_value, 'new': new}
+	return cls
+```
+
+### 实例的初始化器
+
+```python
+def init_instance(cls, *args)
+	instance = make_instance(cls)
+	init = cls['get']('__init__')
+	if init:
+		init(instance, *args)
+	return instance
+```
+
+### 业务
+
+```python
+def make_account_class():
+	def __init__(self, holder):
+		self['set']('holder', holder)
+		self['set']('balance', 0)
+	def deposit(self, amount):
+		self['set']('balance', self['get']('balance') + amount)
+	return make_class({'__init__': __init__, 'deposit' = deposit})
 ```
