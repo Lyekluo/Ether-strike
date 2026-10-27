@@ -386,7 +386,7 @@ attributes 不用单独传回，它被 get_value 和 set_value 两个函数都�
 ### 类生成器
 
 ```python
-def make_class(sttributes, base_class=None):
+def make_class(attributes, base_class=None):
 	
 	def get_value(name):
 		if name in attributes:
@@ -407,7 +407,7 @@ def make_class(sttributes, base_class=None):
 ### 实例的初始化器
 
 ```python
-def init_instance(cls, *args)
+def init_instance(cls, *args):
 	instance = make_instance(cls)
 	init = cls['get']('__init__')
 	if init:
@@ -424,5 +424,5 @@ def make_account_class():
 		self['set']('balance', 0)
 	def deposit(self, amount):
 		self['set']('balance', self['get']('balance') + amount)
-	return make_class({'__init__': __init__, 'deposit' = deposit})
+	return make_class({'__init__': __init__, 'deposit': deposit})
 ```
