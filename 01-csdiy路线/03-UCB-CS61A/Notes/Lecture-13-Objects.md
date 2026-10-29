@@ -248,6 +248,18 @@ Account.interest = 0.04
 0.05
 ```
 
+`isinstance()` 函数用于判断一个对象是否是一个已知的类型，基本语法为
+
+```python
+isinstance(object, classinfo)
+```
+
+```python
+>>> a = 2
+>>> instance(a, int)
+True
+```
+
 ## @dataclass
 
 `@dataclass` 是原生 class 的一个模板生成器
