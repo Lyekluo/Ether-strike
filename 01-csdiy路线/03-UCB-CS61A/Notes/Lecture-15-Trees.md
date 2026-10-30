@@ -21,10 +21,10 @@
 - 判断树是否为叶子：`is_leaf(t)`
 - 把树作为一个值：`return t`、`f(t)`、`[t]`、`s = t` 等等
 
-## Class Code
+## Code
 
 ```python
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class Tree[T]:
@@ -34,3 +34,55 @@ class Tree[T]:
 def is_leaf(t: Tree) -> bool:
 	return not t.branches
 ```
+
+### 例1 数叶子
+
+```python
+def count_leaves(t):
+	if is_leaf(t):
+		return 1
+	else:
+		branch_counts = [count_leaves(b) for b in t.branches]
+		return sum(branch_counts)
+```
+
+### 例2 取最大标签值
+
+```python
+def largest_label(t):
+	if is_leaf(t):
+		return t.label
+	else:
+		return max([largest_label(b) for b in t.branches] + [t.label])
+```
+
+### 例3 取最大和路径
+
+```python
+def largest_path_sum:
+	if is_leaf(t):
+		return t.label
+	else:
+		return t.label + max([largest_path_sum(b) for b in branches])
+```
+
+### 例4
+
+打印所有大于根标签的枝叶标签值
+
+```python
+def above_root(t):
+	def process(u):
+		if u.label > t.label:
+			print(u.label)
+		for b in u.branches:
+			process(b)
+	process(t)
+```
+
+四个例子分别指向
+
+- 聚合
+- 极值
+- 路径
+- 条件遍历
