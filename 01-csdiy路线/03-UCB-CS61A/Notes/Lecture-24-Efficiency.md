@@ -1,7 +1,5 @@
 # 效率
 
-这节没有新语法
-
 ## Memorization 记忆化
 
 fib 函数
@@ -83,3 +81,78 @@ def using_add(n):
 - 后移并前插
 - 列表拼接
 
+前三个是快的动作，因为它们每次操作不接触已有数据；后两个是慢的动作，引发了大量的数据位移和复制
+
+## Powers 无限序列生成与截断
+
+```python
+def powers(b):
+	 n = 0
+	 while True:
+		 yield pow(b, n)
+		 n += 1
+		 
+def prefix(t, n):
+	for i in range(n):
+		yield next(t)
+```
+
+```python
+>>> list(prefix(powers(2), 10))
+[1, 2, 4, 8, 16, 32, 64, 128, 256, 512]
+```
+
+## 高阶生成器函数
+
+```python
+>>> from operator import add
+>>> 
+>>> def map_pairs(f, t):
+...     previous = next(t)
+...     for x in t:
+...         yield f(previous, x)
+...         previous = x
+...
+>>> list(map_pairs(add, iter([3, 4, 5, 6, 7])))
+[7, 9, 11, 13]
+>>> list(prefix(map_pairs(lambda x, y:(x, y), powers(2)), 5))
+[(1, 2), (2, 4), (4, 8), (8, 16), (16, 32)]
+```
+
+其中循环 `for x in t` 即为不断调用 `next(t)` ，拿到里面的数据赋值给 x，直到 StopIteration
+
+## 链表和树的生成器遍历
+
+我们回忆链表和树的类定义
+
+```python
+from dataclasses import dataclass, field
+
+type LinkedList[T] = Link[T] | tuple[()]
+
+@dataclass
+class Link[T]:
+	first: T
+	rest: LinkedList[T] = () # 默认为空
+	
+@dataclass
+class Tree[T]:
+	label: T
+	branches : list[Tree[T]] = field(default_factory = list)
+```
+
+遍历生成器函数
+
+```python
+def items(s: LinkedList):
+	while isinstance(s, Link):
+		yield s.first
+		s = s.rest
+		
+def labels(t: Tree):
+	yield t.label
+	for b in t.branches:
+		yield from labels(b)
+```
+
+`yield from` 的定义是将后面的生成器函数遍历完的结果一个接一个全部传回
