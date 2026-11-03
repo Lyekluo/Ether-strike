@@ -156,3 +156,35 @@ def labels(t: Tree):
 ```
 
 `yield from` 的定义是将后面的生成器函数遍历完的结果一个接一个全部传回
+
+## 函数装饰器
+
+```python
+>>> def trace(fn):
+...     def wrapped(x):
+...         print('->', fn, '(', x, ')')
+...         return fn(x)
+...     return wrapped
+...
+>>> @trace
+... def triple(x):
+...     return 3 * x
+...
+>>> triple(12)
+-> <function triple at 0x7082242756f0> ( 12 )
+36
+>>> run_docstring_examples(triple, globals(), True)
+Finding tests in NoName
+```
+
+我们先定义了一个高阶函数 trace，它返回一个函数：在调用自己的参数之前，先用一条 print 语句把函数和参数打印出来
+
+在 `@trace` 下，triple 最终绑定的不是 triple 函数本身，而是 `trace(triple)` 的返回值
+
+如果前面没有 trace，等价写法即为在后面补上
+
+```python
+>>> triple = trace(triple)
+```
+
+装饰器符号 `@` 后面也可以跟一个调用表达式，求值得到一个函数
