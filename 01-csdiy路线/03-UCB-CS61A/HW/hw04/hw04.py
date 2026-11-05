@@ -13,6 +13,12 @@ def shuffle(s):
     """
     assert len(s) % 2 == 0, 'len(seq) must be even'
     "*** YOUR CODE HERE ***"
+    c = [0 for i in range(0, len(s))]
+    for i in range(0, len(s) // 2):
+        c[2 * i] = s[i]
+        c[2 * i + 1] = s[len(s) // 2 + i]
+    return c
+
 
 
 def deep_map(f, s):
@@ -38,6 +44,15 @@ def deep_map(f, s):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(f, a):
+        if isinstance(a, list):
+            for i in range(len(a)):
+                a[i] = helper(f, a[i])
+            return a
+        else:
+            return f(a)
+    for i in range(len(s)):
+        s[i] = helper(f, s[i])
 
 
 HW_SOURCE_FILE=__file__
