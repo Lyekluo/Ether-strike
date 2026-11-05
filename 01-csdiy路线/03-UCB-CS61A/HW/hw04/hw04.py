@@ -13,6 +13,12 @@ def shuffle(s):
     """
     assert len(s) % 2 == 0, 'len(seq) must be even'
     "*** YOUR CODE HERE ***"
+    c = [0 for i in range(0, len(s))]
+    for i in range(0, len(s) // 2):
+        c[2 * i] = s[i]
+        c[2 * i + 1] = s[len(s) // 2 + i]
+    return c
+
 
 
 def deep_map(f, s):
@@ -38,6 +44,15 @@ def deep_map(f, s):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(f, a):
+        if isinstance(a, list):
+            for i in range(len(a)):
+                a[i] = helper(f, a[i])
+            return a
+        else:
+            return f(a)
+    for i in range(len(s)):
+        s[i] = helper(f, s[i])
 
 
 HW_SOURCE_FILE=__file__
@@ -47,11 +62,15 @@ def planet(mass):
     """Construct a planet of some mass."""
     assert mass > 0
     "*** YOUR CODE HERE ***"
+    return ['planet', mass]
+
 
 def mass(p):
     """Select the mass of a planet."""
     assert is_planet(p), 'must call mass on a planet'
     "*** YOUR CODE HERE ***"
+    return p[1] 
+
 
 def is_planet(p):
     """Whether p is a planet."""
@@ -104,6 +123,18 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    def M(x, pos):
+        ans = 0
+        if is_planet(end(left(x))):
+            ans += (pos - length(left(x))) * mass(end(left(x)))
+        else:
+            ans += M(end(left(x)), pos - length(left(x)))
+        if is_planet(end(right(x))):
+            ans += (pos + length(right(x))) * mass(end(right(x)))
+        else:
+            ans += M(end(right(x)), pos + length(right(x)))
+        return ans
+    return M(m, 0) == 0
 
 
 def berry_finder(t):
@@ -124,6 +155,13 @@ def berry_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
+    if label(t) == 'berry':
+        return True
+    for b in branches(t):
+        if berry_finder(b):
+            return True
+    return False
+
 
 
 HW_SOURCE_FILE=__file__
@@ -139,6 +177,10 @@ def max_path_sum(t):
     17
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return label(t)
+    return max([max_path_sum(b) for b in branches(t)]) + label(t)
+
 
 
 def mobile(left, right):

@@ -114,6 +114,6 @@ def make_repeater(f, n):
     """
     "*** YOUR CODE HERE ***"
     if n > 1:
-        return lambda x: f(make_repeater(f, n-1)(x))
+        return lambda x: f(make_repeater(f, n - 1)(x))
     else:
         return lambda x: f(x)
