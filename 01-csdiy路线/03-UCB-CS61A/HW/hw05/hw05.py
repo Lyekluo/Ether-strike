@@ -128,7 +128,6 @@ def yield_paths(t, value):
 
 
 
-
 # Tree Data Abstraction
 
 def tree(label, branches=[]):
