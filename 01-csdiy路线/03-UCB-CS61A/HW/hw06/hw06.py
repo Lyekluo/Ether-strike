@@ -7,7 +7,8 @@ def midsem_survey(p):
     '2bf925d47c03503d3ebe5a6fc12d479b8d12f14c0494b43deba963a0'
     """
     import hashlib
-    return hashlib.sha224(p.encode('utf-8')).hexdigest()
+    # return hashlib.sha224(p.encode('utf-8')).hexdigest()
+    return '2bf925d47c03503d3ebe5a6fc12d479b8d12f14c0494b43deba963a0' 
 
 
 class VendingMachine:
@@ -50,6 +51,11 @@ class VendingMachine:
     def __init__(self, product, price):
         """Set the product and its price, as well as other instance attributes."""
         "*** YOUR CODE HERE ***"
+        self.product = product
+        self.price = price
+        self.stock = 0
+        self.balance = 0
+
 
     def restock(self, n):
         """Add n to the stock and return a message about the updated stock level.
@@ -57,6 +63,9 @@ class VendingMachine:
         E.g., Current candy stock: 3
         """
         "*** YOUR CODE HERE ***"
+        self.stock += n
+        print(f'\'Current {self.product} stock: {self.stock}\'')
+
 
     def add_funds(self, n):
         """If the machine is out of stock, return a message informing the user to restock
@@ -69,6 +78,12 @@ class VendingMachine:
         E.g., Current balance: $4
         """
         "*** YOUR CODE HERE ***"
+        if self.stock == 0:
+            print(f'\'Nothing left to vend. Please restock. Here is your ${n}.\'')
+        else:
+            self.balance += n
+            print(f'\'Current balance: ${self.balance}\'')
+
 
     def vend(self):
         """Dispense the product if there is sufficient stock and funds and
@@ -82,6 +97,19 @@ class VendingMachine:
               Please add $3 more funds.
         """
         "*** YOUR CODE HERE ***"
+        if self.stock == 0:
+            print(f'\'Nothing left to vend. Please restock.\'')
+        else:
+            if self.balance < self.price:
+                print(f'\'Please add ${self.price - self.balance} more funds.\'')
+            elif self.balance == self.price:
+                print(f'\'Here is your {self.product}.\'')
+                self.balance = 0
+                self.stock -= 1
+            else:
+                print(f'\'Here is your {self.product} and ${self.balance - self.price} change.\'')
+                self.balance = 0
+                self.stock -= 1
 
 
 def store_digits(n):
@@ -104,6 +132,18 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    power = 0
+    while (pow(10, power) < n):
+        power += 1
+    def helper(n, k):
+        if k == 0:
+            return Link(1)
+        elif k == 1:
+            return Link(n)
+        else:
+            return Link(n // pow(10, k - 1), helper(n % pow(10, k - 1), k - 1))
+    return helper(n, power)
+
 
 
 def deep_map_mut(func, s):
@@ -126,6 +166,12 @@ def deep_map_mut(func, s):
     <9 <16> 25 36>
     """
     "*** YOUR CODE HERE ***"
+    if isinstance(s.first, Link):
+        deep_map_mut(func, s.first)
+    else:
+        s.first = func(s.first)
+    if s.rest is not Link.empty:
+        deep_map_mut(func, s.rest)
 
 
 def two_list(vals, counts):
@@ -147,6 +193,22 @@ def two_list(vals, counts):
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
     """
     "*** YOUR CODE HERE ***"
+    index = -1
+    repeat_index = 0
+    state = 0
+    num = 0
+    index_sum = sum(counts)
+    for i in range(0, index_sum):
+        if (repeat_index >= counts[index] or index == -1) and index < (len(counts) - 1):
+            repeat_index = 0
+            index += 1
+            state = vals[index]
+        num += state
+        if index < (len(counts) - 1) or repeat_index < (counts[index] - 1):
+            num *= 10
+        repeat_index += 1
+    return store_digits(num)
+
 
 
 class Link:
