@@ -191,7 +191,6 @@ def two_list(vals, counts):
     >>> c = two_list(a, b)
     >>> c
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
-    """
     "*** YOUR CODE HERE ***"
     index = -1
     repeat_index = 0
@@ -208,6 +207,11 @@ def two_list(vals, counts):
             num *= 10
         repeat_index += 1
     return store_digits(num)
+    """
+    if counts[0] == 1:
+        return Link(vals[0], two_list(vals[1:], counts[1:]))
+    else:
+        return Link(vals[0], two_list(vals, [counts[0] - 1] + counts[1:]))
 
 
 
