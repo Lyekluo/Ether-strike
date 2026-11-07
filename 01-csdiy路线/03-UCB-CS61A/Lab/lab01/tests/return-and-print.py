@@ -13,17 +13,15 @@ test = {
           ...     print('Bears')
           ...     return 'world'
           >>> welcome()
-          a344033e5d41145ddc2ecba020ecca21
-          687c415dafe5ef56622994c5d47f0c53
-          # locked
+          Go
+          'hello'
           >>> print(welcome(), cal())
-          a344033e5d41145ddc2ecba020ecca21
-          54e01e60cd0534843d98b905f4c5207e
-          45bac2b863288e1ee362e4bcae4c1d17
-          # locked
+          Go
+          Bears
+          hello world
           """,
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'multiline': False
         }
       ],
