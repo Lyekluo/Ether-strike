@@ -14,6 +14,8 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
+
 
 
 def sum_digits(y):
@@ -60,7 +62,14 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    def helper(n):
+        ans = 0
+        for i in range(1, n + 1):
+            ans += condition(n, i)
+        return ans
+    return helper
 
+    
 
 def multiple(a, b):
     """Return the smallest number n that is a multiple of both a and b.
@@ -71,7 +80,13 @@ def multiple(a, b):
     42
     """
     "*** YOUR CODE HERE ***"
-
+    def gcd(a, b):
+        while b != 0:
+            t = a % b
+            a = b
+            b = t
+        return a
+    return a * b // gcd(a, b)
 
 
 def cycle(f1, f2, f3):
@@ -101,4 +116,15 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
-
+    def outer_helper(op):
+        def helper(start):
+            ans = start
+            for i in range(op // 3):
+                ans = f3(f2(f1(ans)))
+            if op % 3 == 1:
+                ans = f1(ans)
+            if op % 3 == 2:
+                ans = f2(f1(ans))
+            return ans
+        return helper
+    return outer_helper
