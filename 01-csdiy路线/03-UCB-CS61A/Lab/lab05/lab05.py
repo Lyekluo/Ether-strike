@@ -167,10 +167,11 @@ def sprout_leaves(t, leaves):
     "*** YOUR CODE HERE ***"
     if (is_leaf(t)):
         branches(t).extend(leaves)
+        return t
     else:
         for b in branches(t):
-            sprout_leaves(b)
-
+            sprout_leaves(b, leaves)
+        return t
 
 
 def partial_reverse(s, start):
@@ -191,7 +192,7 @@ def partial_reverse(s, start):
             return reverse(s[1:]) + s[0]
         else:
             return s
-    return s[:(start)] + reverse(s[(start):])
+    s[(start):] = reverse(s[(start):])
 
 
 
