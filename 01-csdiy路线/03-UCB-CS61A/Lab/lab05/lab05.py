@@ -27,6 +27,14 @@ def insert_items(s, before, after):
     True
     """
     "*** YOUR CODE HERE ***"
+    ans = []
+    for x in range(len(s)):
+        ans.append(s[x])
+        if (s[x] == before):
+            ans.append(after)
+    s[:] = ans
+    return s 
+
 
 
 def group_by(s, fn):
@@ -39,13 +47,22 @@ def group_by(s, fn):
     >>> group_by(range(-3, 4), lambda x: x * x)
     {9: [-3, 3], 4: [-2, 2], 1: [-1, 1], 0: [0]}
     """
+    #grouped = {}
+    #for ____ in ____:
+    #    key = ____
+    #    if key in grouped:
+    #        ____
+    #    else:
+    #        grouped[key] = ____
+    #return grouped
+
     grouped = {}
-    for ____ in ____:
-        key = ____
+    for x in s:
+        key = fn(x)
         if key in grouped:
-            ____
+            grouped[key].append(x)
         else:
-            grouped[key] = ____
+            grouped[key] = [x]
     return grouped
 
 
@@ -71,6 +88,12 @@ def count_occurrences(t, n, x):
     2
     """
     "*** YOUR CODE HERE ***"
+    count = 0
+    for i in range(n):
+        if next(t) == x:
+            count += 1
+    return count
+
 
 
 def repeated(t, k):
@@ -94,6 +117,18 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    last = 0
+    now = 0
+    count = 0
+    while (count < k):
+        now = next(t)
+        if (last == now):
+            count += 1
+        else:
+            last = now
+            count = 1
+    return last
+
 
 
 def sprout_leaves(t, leaves):
@@ -130,6 +165,12 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
+    if (is_leaf(t)):
+        branches(t).extend(leaves)
+    else:
+        for b in branches(t):
+            sprout_leaves(b)
+
 
 
 def partial_reverse(s, start):
@@ -145,6 +186,13 @@ def partial_reverse(s, start):
     [1, 2, 7, 6, 5, 3, 4]
     """
     "*** YOUR CODE HERE ***"
+    def reverse(s):
+        if (len(s)) > 1:
+            return reverse(s[1:]) + s[0]
+        else:
+            return s
+    return s[:(start)] + reverse(s[(start):])
+
 
 
 
