@@ -100,7 +100,7 @@ def max_path_sum(t):
     if is_leaf(t):
         return t.label
     else:
-        return max(t.branches, key=max_path_sum) + t.label
+        return max([max_path_sum(b) for b in t.branches]) + t.label
 
 
 
