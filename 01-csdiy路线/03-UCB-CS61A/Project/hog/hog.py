@@ -381,7 +381,21 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Remove this line once implemented.
+    #return 6  # Remove this line once implemented.
+    goal = 100
+    new_score = sus_update(0, score, opponent_score)
+    if new_score >= goal:
+        return 0
+    gain = new_score - score
+    if gain >= 9:
+        return 0
+    if score > opponent_score + 20:
+        return 4
+    if goal - score <= 10:
+        return 1
+    return 6
+
+
     # END PROBLEM 12
 
 
