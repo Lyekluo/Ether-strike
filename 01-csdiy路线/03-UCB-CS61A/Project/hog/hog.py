@@ -275,7 +275,13 @@ def make_averaged(original_function, times_called=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
-    
+    def helper(*args):
+        ans = 0
+        for i in range(times_called):
+            ans += original_function(*args)
+        return ans / times_called
+    return helper
+
 
 
     # END PROBLEM 8
@@ -291,6 +297,17 @@ def max_scoring_num_rolls(dice=six_sided, times_called=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    max_idx = 1
+    max_avg = 0
+    for i in range(1, 11):
+        avg = make_averaged(roll_dice, times_called)(i, dice)
+        if avg > max_avg:
+            max_idx = i
+            max_avg = avg
+    return max_idx
+        
+
+
     # END PROBLEM 9
 
 
@@ -335,14 +352,26 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
     points, and returns NUM_ROLLS otherwise. Ignore score and Sus Fuss.
     """
     # BEGIN PROBLEM 10
-    return num_rolls  # Remove this line once implemented.
+    #return num_rolls  # Remove this line once implemented.
+    if simple_update(0, score, opponent_score) - score >= threshold:
+        return 0
+    else:
+        return num_rolls
+
+
     # END PROBLEM 10
 
 
 def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
     """This strategy returns 0 dice when your score would increase by at least threshold."""
     # BEGIN PROBLEM 11
-    return num_rolls  # Remove this line once implemented.
+    #return num_rolls  # Remove this line once implemented.
+    if sus_update(0, score, opponent_score) - score >= threshold:
+        return 0
+    else:
+        return num_rolls
+
+
     # END PROBLEM 11
 
 
