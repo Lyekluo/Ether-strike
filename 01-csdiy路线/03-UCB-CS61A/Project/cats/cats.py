@@ -38,6 +38,19 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    index = 0
+    filter_index = -1
+    while filter_index < k:
+        if index >= len(paragraphs):
+            return f''
+        else:
+            if select(paragraphs[index]):
+                filter_index += 1
+                if filter_index == k:
+                    return f'{paragraphs[index]}'
+            index += 1
+
+
     # END PROBLEM 1
 
 
@@ -58,6 +71,16 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def checker(paragraphs):
+        cleaned = remove_punctuation(paragraphs.lower()).split()
+        for word in cleaned:
+            if word in subject:
+                return True
+        return False
+    return checker
+        
+
+
     # END PROBLEM 2
 
 
@@ -88,6 +111,22 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if typed == '':
+        if source == '':
+            return 100.0
+        else:
+            return 0.0
+    elif source == '':
+        return 0.0
+    index = min(len(typed_words), len(source_words))
+    count = 0
+    for i in range(index):
+        if typed_words[i] == source_words[i]:
+            count += 1
+    return count * 100 / len(typed_words)
+        
+
+
     # END PROBLEM 3
 
 
@@ -106,6 +145,9 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return len(typed) * 12 / elapsed
+
+
     # END PROBLEM 4
 
 
