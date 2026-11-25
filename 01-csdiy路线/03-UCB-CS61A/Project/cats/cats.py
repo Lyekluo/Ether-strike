@@ -421,16 +421,10 @@ def fastest_words(words_and_times):
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
-    ppl = len(words_and_times['times'])
-    each_words = []
-    for j in range(ppl):
-        each_words.append([])
-    for i in range(len(words_and_times['words'])):
-        min_jdx = 0
-        for j in range(1, ppl):
-            if words_and_times['times'][j][i] < words_and_times['times'][min_jdx][i]:
-                min_jdx = j
-        each_words[min_jdx].append(words_and_times['words'][i])
+    words, times = words_and_times['words'], words_and_times['times']
+    each_words = [[] for _ in range(len(times))]
+    for word, ts in zip(words, zip(*times)):
+        each_words[ts.index(min(ts))].append(word)
     return each_words
 
 
