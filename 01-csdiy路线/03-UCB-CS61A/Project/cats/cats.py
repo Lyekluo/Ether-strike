@@ -178,6 +178,20 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
+        if (typed, source) not in cache:
+            result = diff_function(typed, source, limit)
+            toadd = (result, limit)
+            cache[(typed, source)] = [toadd]
+            return result
+        for res in cache[(typed, source)]:
+            if limit == res[1]:
+                return res[0]
+        result = diff_function(typed, source, limit)
+        toadd = (result, limit)
+        cache[(typed, source)].append(toadd)
+        return result
+
+
         # END PROBLEM EC
 
     return memoized
